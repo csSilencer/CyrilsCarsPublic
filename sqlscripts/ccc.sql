@@ -1,3 +1,21 @@
+drop table CLIENT cascade constraints;                        
+drop table SALE cascade constraints;                          
+drop table LISTING cascade constraints;                       
+drop table CAR cascade constraints;                           
+drop table MAKE cascade constraints;                          
+drop table CMODEL cascade constraints;                        
+drop table CAR_FEATURE cascade constraints;                   
+drop table FEATURE cascade constraints;
+
+DROP SEQUENCE SEQ_CAR_ID;
+DROP SEQUENCE SEQ_MAKE_ID;
+DROP SEQUENCE SEQ_MODEL_ID;
+DROP SEQUENCE SEQ_LISTING_ID;
+DROP SEQUENCE SEQ_SALE_ID;
+DROP SEQUENCE SEQ_FEATURE_ID;
+DROP SEQUENCE SEQ_CAR_FEATURE_ID;
+DROP SEQUENCE SEQ_CLIENT_ID;
+
 CREATE TABLE CLIENT (
   CLIENT_ID NUMBER(7) NOT NULL,
   CLIENT_GIVENNAME VARCHAR2(50) NOT NULL,
