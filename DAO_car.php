@@ -120,22 +120,49 @@
 				return "unable to fetch";
 			}
 		}
+		public function getModelIDByName($name) {
+			$query = "SELECT MODEL_ID FROM CMODEL WHERE MODEL_NAME='".$name."'";
+			$stmt = oci_parse($this->_conn, $query);
+			if(@oci_execute($stmt)) {
+				return oci_fetch_array($stmt)["MODEL_ID"];
+			} else {
+				return "unable to fetch";
+			}
+		}
 		
 		public function find($where) {
 			$sql = "SELECT * FROM CAR";
 			
 			$whereClause = array();
 			
+			/**
+$query = "SELECT * FROM CAR WHERE CAR_REG LIKE '%".$reg."%' AND MAKE_ID IN (SELECT MAKE_ID FROM MAKE WHERE MAKE_NAME LIKE '%".$make."%') AND MODEL_ID IN (SELECT MODEL_ID FROM CMODEL WHERE MODEL_NAME LIKE '%".$model."%')";
+			**/
+			
 			foreach($where as $key => $value ) {
-				if($key === "MAKE_NAME") {
-					$whereClause[] = "MAKE_ID"."='".$this->getMakeIdByName($value)."'";
-				} else {
-					// $whereClause[] = $key."='".$value."'";
+				if(!empty($value)) {
+					switch($key) {
+						case "MAKE_NAME":
+							$whereClause[] = "MAKE_ID"." IN (SELECT MAKE_ID FROM MAKE WHERE MAKE_NAME LIKE '%".strtoupper($value)."%')";
+							break;
+						case "MODEL_NAME":
+							$whereClause[] = "MODEL_ID"." IN (SELECT MODEL_ID FROM CMODEL WHERE MODEL_NAME LIKE '%".strtoupper($value)."%')";
+							break;
+						case "CAR_REG":
+							$whereClause[] = "CAR_REG LIKE '%".strtoupper($value)."%'";
+							break;
+						case "YEAR_LOWER":
+							$whereClause[] = "CAR_YEAR >= ".$value;
+							break;
+						case "YEAR_UPPER":
+							$whereClause[] = "CAR_YEAR <= ".$value;
+							break;
+					}	
 				}
 			}
 			
 			if(count($whereClause) > 0) {
-				$sql.=" WHERE ".implode(' AND', $whereClause);				
+				$sql.=" WHERE ".implode(' AND ', $whereClause);				
 			}
 			
 			echo $sql;
