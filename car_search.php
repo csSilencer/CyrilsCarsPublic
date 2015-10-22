@@ -1,7 +1,7 @@
 <?php 
 session_start(); 
 ob_start();
-include("conn.php");
+include("phputils/conn.php");
 
 ?>
 <html>

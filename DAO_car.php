@@ -127,10 +127,10 @@
 			$whereClause = array();
 			
 			foreach($where as $key => $value ) {
-				if($key = "MAKE_NAME") {
+				if($key === "MAKE_NAME") {
 					$whereClause[] = "MAKE_ID"."='".$this->getMakeIdByName($value)."'";
 				} else {
-					$whereClause[] = $key."='".$value."'";
+					// $whereClause[] = $key."='".$value."'";
 				}
 			}
 			
