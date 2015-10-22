@@ -210,7 +210,7 @@ function getCarImages($car_id) {
 				        		for($i = 0; $i < $results-> rowCount(); $i++) {
 				        			$row = $results->getNext($features, $i);			        	
 				        	?>
-				        		<option value = <?php echo $row->FEATURE_NAME;?>><?php echo $row->FEATURE_NAME;?></option>
+				        		<option value = <?php echo $row->FEATURE_ID;?>><?php echo $row->FEATURE_NAME;?></option>
 				        	<?php
 				        		} 
 				        	?>

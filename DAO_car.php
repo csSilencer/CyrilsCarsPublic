@@ -157,6 +157,10 @@ $query = "SELECT * FROM CAR WHERE CAR_REG LIKE '%".$reg."%' AND MAKE_ID IN (SELE
 						case "YEAR_UPPER":
 							$whereClause[] = "CAR_YEAR <= ".$value;
 							break;
+						default:
+							//this case is reached by Features only
+							$whereClause[] = "CAR_ID IN (SELECT CAR_ID FROM CAR_FEATURE WHERE FEATURE_ID=".$value.")";
+							break;
 					}	
 				}
 			}
