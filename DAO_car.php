@@ -135,10 +135,6 @@
 			
 			$whereClause = array();
 			
-			/**
-$query = "SELECT * FROM CAR WHERE CAR_REG LIKE '%".$reg."%' AND MAKE_ID IN (SELECT MAKE_ID FROM MAKE WHERE MAKE_NAME LIKE '%".$make."%') AND MODEL_ID IN (SELECT MODEL_ID FROM CMODEL WHERE MODEL_NAME LIKE '%".$model."%')";
-			**/
-			
 			foreach($where as $key => $value ) {
 				if(!empty($value)) {
 					switch($key) {
@@ -159,7 +155,10 @@ $query = "SELECT * FROM CAR WHERE CAR_REG LIKE '%".$reg."%' AND MAKE_ID IN (SELE
 							break;
 						default:
 							//this case is reached by Features only
-							$whereClause[] = "CAR_ID IN (SELECT CAR_ID FROM CAR_FEATURE WHERE FEATURE_ID=".$value.")";
+							//dont count the first selection
+							if($value !== "-1") {
+								$whereClause[] = "CAR_ID IN (SELECT CAR_ID FROM CAR_FEATURE WHERE FEATURE_ID=".$value.")";
+							}
 							break;
 					}	
 				}
@@ -168,9 +167,6 @@ $query = "SELECT * FROM CAR WHERE CAR_REG LIKE '%".$reg."%' AND MAKE_ID IN (SELE
 			if(count($whereClause) > 0) {
 				$sql.=" WHERE ".implode(' AND ', $whereClause);				
 			}
-			
-			echo $sql;
-			
 			$parse = oci_parse($this->_conn, $sql);
 			oci_execute($parse);
 			

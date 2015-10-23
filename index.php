@@ -68,7 +68,17 @@ function getCarImages($car_id) {
 			font-weight: bold;
 		}
 		h3 {
-			display: inline-block;
+			display: block;
+			margin-left: 10px;
+		}
+		input {
+			margin-left: 10px;
+		}
+		.featureinput {
+			margin-left: 10px;
+		}
+		.features h3 {
+			display:inline-block;
 		}
 		.code {
 			border-top: 1px solid black;
@@ -94,24 +104,15 @@ function getCarImages($car_id) {
 				<div class="collapse navbar-collapse" id="myNavbar">
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="index.php">Home</a></li>
-						<li class="active"><a href="about.php">About</a></li>
-						<li class="active"><a href="faq.php">FAQ</a></li>
-						<li class="active"><a href="contact.php">Contact</a></li>
-						<li class="active"><a href="logout.php">Log-in/Register</a></li>
+						<li class="active"><a href="">About</a></li>
+						<li class="active"><a href="">FAQ</a></li>
+						<li class="active"><a href="">Contact</a></li>
+						<li class="active"><a href="">Log-in/Register</a></li>
 					</ul>
 				</div>
 			</div>
 		</nav>
 		<h1>Home</h1>
-		<p>The expectation of this assignment is to develop a web/database application for Cyril
-		that will enable his clients to retrieve a list of cars that meet their entered search
-		criteria. Clients should be able to search on year range, registration number (or part
-		thereof), car make (or part thereof), car model (or part thereof) and one or more car
-		features.</p>
-		<p>There will be one textbox for each of the search attributes and checkboxes for the
-		features. The search will assume an AND for the search criteria and an AND for the
-		features. For example find all the cars in year range 1970-1980 AND Ford AND
-		Falcon AND air-conditioning AND power steering AND power windows.</p>
 		
 		 <?php 
 			if (sizeof($_POST) > 0) {
@@ -127,6 +128,7 @@ function getCarImages($car_id) {
 				  		<th>Make</th>
 				  		<th>Model</th>
 				  		<th>Registration</th>
+				  		<th>Features</th>
 				  		<th>Body Type</th>
 				  		<th>Transmission</th>
 				  		<th>Year</th>
@@ -138,6 +140,7 @@ function getCarImages($car_id) {
 				  		<th>Make</th>
 				  		<th>Model</th>
 				  		<th>Registration</th>
+				  		<th>Features</th>
 				  		<th>Body Type</th>
 				  		<th>Transmission</th>
 				  		<th>Year</th>
@@ -154,6 +157,21 @@ function getCarImages($car_id) {
 				  			<td><?php echo getMakeByID($row->MAKE_ID, $conn)["MAKE_NAME"];?></td>
 				  			<td><?php echo getModelByID($row->MODEL_ID, $conn)["MODEL_NAME"];?></td>
 				  			<td><?php echo $row->CAR_REG;?></td>
+				  			<td>
+				  				<?php
+				  					include_once("DAO_CarFeatures.php");
+									$carfeatures = new DAO_CarFeatures($conn);
+									$cfresults = $carfeatures->find(array("CAR_ID" => $row->CAR_ID));
+									if($cfresults) {
+										for($j = 0; $j < $cfresults->rowCount(); $j++) {
+											$cfrow = $cfresults->getNext($carfeatures, $j);
+											echo $cfrow->FEATURE_NAME."<br>";
+										}
+									} else {
+										echo "None";
+									}
+					  			?>
+				  			</td>
 				  			<td><?php echo $row->CAR_BODYTYPE;?></td>
 				  			<td><?php echo $row->CAR_TRANSMISSION;?></td>
 				  			<td><?php echo $row->CAR_YEAR;?></td>
@@ -167,7 +185,7 @@ function getCarImages($car_id) {
 				  						$directory = '';
 				  					}
 				  					// echo $directory;
-				  					echo '<img src="' . $directory . '" width="80" height="80" alt="Car Image">';
+				  					echo '<img src="' . $directory . '" width="300" height="225" alt="Car Image">';
 								?>
 				  			</td>
 				  		</tr>
@@ -175,9 +193,16 @@ function getCarImages($car_id) {
 				  	} //end while
 				  	?>
 			  	</table>
+				<div class="submitButtons">
+						<a href="index.php" class="btn btn-lg btn-primary">Back</a>
+				</div>
 		<?php 
 			} else { ?>
-				<h1>No Results</h1> <?php			
+				<h1>No Results</h1>
+				<div class="submitButtons">
+						<a href="index.php" class="btn btn-lg btn-primary">Back</a>
+				</div>
+				<?php			
 			} 
 		} else {
 		?>
@@ -200,12 +225,11 @@ function getCarImages($car_id) {
                     </a>
                     <div class="featureinput">
                         <select name="feature_name_1">
-                            <option>Select A Feature</option>
+                            <option value="-1">Select A Feature</option>
                             <?php
 				        		include_once("DAO_Features.php");
 								$features = new DAO_Features($conn);
 								$results = $features->find(array());
-								print_r($results);
 								$counter = 0;
 				        		for($i = 0; $i < $results-> rowCount(); $i++) {
 				        			$row = $results->getNext($features, $i);			        	

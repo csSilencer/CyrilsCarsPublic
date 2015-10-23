@@ -53,7 +53,6 @@
 			oci_execute($parse);
 			$numrows = oci_fetch_all($parse, $results, null, null, OCI_FETCHSTATEMENT_BY_ROW);
 			if($numrows > 0) {
-				echo $numrows." <=0";
 				include_once('ReadOnlyResultsSet.php');
 				return new ReadOnlyResultSet($results);
 			} else {
